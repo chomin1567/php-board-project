@@ -1,0 +1,13 @@
+# uploads 폴더에서 PHP 실행 금지
+<Directory uploads>
+    php_flag engine off
+</Directory>
+
+# 디렉토리 목록 보기 금지
+Options -Indexes
+
+# .htaccess 파일 접근 금지
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>

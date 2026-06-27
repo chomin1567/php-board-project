@@ -8,6 +8,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+/* CSRF 토큰 검증 */
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("잘못된 요청입니다.");
+}
+
 /* 폼에서 게시글 id와 댓글 내용 가져옴 */
 $post_id = $_POST['post_id'];
 $content = $_POST['content'];

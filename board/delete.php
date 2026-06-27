@@ -7,8 +7,12 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+/* CSRF 토큰 검증 */
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("잘못된 요청입니다.");
+}
 
-$id = $_GET['id']; /* URL에서 게시글 id 가져옴 */
+$id = $_POST['id']; /* POST 요청에서 게시글 id 가져옴 */
 
 
 $stmt = $pdo->prepare("DELETE FROM posts WHERE id=?"); /* 가져온 해당 게시글 삭제함 */

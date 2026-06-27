@@ -29,10 +29,12 @@ $attachments = $stmt3->fetchAll();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($post['title']) ?></title>
 </head>
+
 <body>
     <h1><?= htmlspecialchars($post['title']) ?></h1>
     <p>작성자: <?= htmlspecialchars($post['username']) ?></p>
@@ -40,30 +42,41 @@ $attachments = $stmt3->fetchAll();
     <hr>
     <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
     <a href="edit.php?id=<?= $id ?>">수정</a>
-    <a href="delete.php?id=<?= $id ?>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+    <form method="POST" action="delete.php" style="display:inline">
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+        <input type="hidden" name="id" value="<?= $id ?>">
+        <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+    </form>
     <a href="index.php">목록으로</a>
 
     <?php if ($attachments): ?>
-    <h2>첨부파일</h2>
-    <?php foreach ($attachments as $file): ?>
-    <p><a href="download.php?id=<?= $file['id'] ?>"><?= htmlspecialchars($file['original_name']) ?></a></p>
-    <?php endforeach; ?>
+        <h2>첨부파일</h2>
+        <?php foreach ($attachments as $file): ?>
+            <p><a href="download.php?id=<?= $file['id'] ?>"><?= htmlspecialchars($file['original_name']) ?></a></p>
+        <?php endforeach; ?>
     <?php endif; ?>
 
     <h2>댓글</h2>
     <?php foreach ($comments as $comment): ?>
-    <p><?= htmlspecialchars($comment['username']) ?>: <?= htmlspecialchars($comment['content']) ?>
-    <?php if ($_SESSION['user_id'] == $comment['author_id']): ?>
-    <a href="edit_comment.php?id=<?= $comment['id'] ?>&post_id=<?= $id ?>">수정</a>
-    <a href="delete_comment.php?id=<?= $comment['id'] ?>&post_id=<?= $id ?>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-    <?php endif; ?>
-    </p>
+        <p><?= htmlspecialchars($comment['username']) ?>: <?= htmlspecialchars($comment['content']) ?>
+            <?php if ($_SESSION['user_id'] == $comment['author_id']): ?>
+                <a href="edit_comment.php?id=<?= $comment['id'] ?>&post_id=<?= $id ?>">수정</a>
+                <form method="POST" action="delete_comment.php" style="display:inline">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                    <input type="hidden" name="id" value="<?= $comment['id'] ?>">
+                    <input type="hidden" name="post_id" value="<?= $id ?>">
+                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                </form>
+            <?php endif; ?>
+        </p>
     <?php endforeach; ?>
 
     <form method="POST" action="comment.php">
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <input type="hidden" name="post_id" value="<?= $id ?>">
         <textarea name="content"></textarea>
         <button type="submit">댓글 등록</button>
     </form>
 </body>
+
 </html>

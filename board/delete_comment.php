@@ -8,10 +8,15 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-/* URL에서 댓글 id와 게시글 id를 가져옴 */
-$id = $_GET['id'];
-$post_id = $_GET['post_id'];
- /* 가져온 해당 댓글 삭제 */
+/* CSRF 토큰 검증 */
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("잘못된 요청입니다.");
+}
+
+/* POST 요청에서 댓글 id와 게시글 id를 가져옴 */
+$id = $_POST['id'];
+$post_id = $_POST['post_id'];
+ /* 해당 댓글 삭제 */
 $stmt = $pdo->prepare("DELETE FROM comments WHERE id=?");
 $stmt->execute([$id]);
 
