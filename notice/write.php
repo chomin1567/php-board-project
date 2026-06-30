@@ -4,7 +4,7 @@ require 'db.php'; /*DB 연결*/
 
 /* 로그인 안 했으면 로그인 페이지로 이동 */
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../board/login.php');
     exit;
 }
 /* CSRF 토큰 생성 */

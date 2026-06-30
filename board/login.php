@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_regenerate_id(true); /* 세션 고정 공격 방어 */
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
   } else {
     $error = "아이디 또는 비밀번호가 틀렸습니다.";
