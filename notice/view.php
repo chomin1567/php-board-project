@@ -41,12 +41,14 @@ $attachments = $stmt3->fetchAll();
     <p>날짜: <?= $post['created_at'] ?></p>
     <hr>
     <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
-    <a href="edit.php?id=<?= $id ?>">수정</a>
-    <form method="POST" action="delete.php" style="display:inline">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <input type="hidden" name="id" value="<?= $id ?>">
-        <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-    </form>
+    <?php if ($_SESSION['user_id'] == $post['author_id']): ?>
+        <a href="edit.php?id=<?= $id ?>">수정</a>
+        <form method="POST" action="delete.php" style="display:inline">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            <input type="hidden" name="id" value="<?= $id ?>">
+            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+        </form>
+    <?php endif; ?>
     <a href="index.php">목록으로</a>
 
     <?php if ($attachments): ?>
@@ -61,22 +63,22 @@ $attachments = $stmt3->fetchAll();
         <p><?= htmlspecialchars($comment['username']) ?>: <?= htmlspecialchars($comment['content']) ?>
             <?php if ($_SESSION['user_id'] == $comment['author_id']): ?>
                 <a href="edit_comment.php?id=<?= $comment['id'] ?>&post_id=<?= $id ?>">수정</a>
-                <form method="POST" action="delete_comment.php" style="display:inline">
-                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-                    <input type="hidden" name="id" value="<?= $comment['id'] ?>">
-                    <input type="hidden" name="post_id" value="<?= $id ?>">
-                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-                </form>
-            <?php endif; ?>
-        </p>
-    <?php endforeach; ?>
+        <form method="POST" action="delete_comment.php" style="display:inline">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            <input type="hidden" name="id" value="<?= $comment['id'] ?>">
+            <input type="hidden" name="post_id" value="<?= $id ?>">
+            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+        </form>
+    <?php endif; ?>
+    </p>
+<?php endforeach; ?>
 
-    <form method="POST" action="comment.php">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <input type="hidden" name="post_id" value="<?= $id ?>">
-        <textarea name="content"></textarea>
-        <button type="submit">댓글 등록</button>
-    </form>
+<form method="POST" action="comment.php">
+    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+    <input type="hidden" name="post_id" value="<?= $id ?>">
+    <textarea name="content"></textarea>
+    <button type="submit">댓글 등록</button>
+</form>
 </body>
 
 </html>

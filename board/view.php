@@ -41,12 +41,14 @@ $attachments = $stmt3->fetchAll();
   <p>날짜: <?= $post['created_at'] ?></p>
   <hr>
   <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
-  <a href="edit.php?id=<?= $id ?>">수정</a>
-  <form method="POST" action="delete.php" style="display:inline">
-    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-    <input type="hidden" name="id" value="<?= $id ?>">
-    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-  </form>
+  <?php if ($_SESSION['user_id'] == $post['author_id']): ?>
+    <a href="edit.php?id=<?= $id ?>">수정</a>
+    <form method="POST" action="delete.php" style="display:inline">
+      <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+    </form>
+  <?php endif; ?>
   <a href="index.php">목록으로</a>
 
   <?php if ($attachments): ?>
